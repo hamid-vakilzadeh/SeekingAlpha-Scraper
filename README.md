@@ -49,3 +49,5 @@ You should probably do it manually in the session that you start and try again.
 * After the first time you sing in, you will not need to sing in again because
 the `chromedriver` option `user-data-dir` is added.
 * This module uses `webdriver-manager`, which handles `chromedirver` versions automatically.
+* Lastly and importantly, this scraper is designed to be slow BY DESIGN. as mentioned before, this 
+is for educational purposes only and nothing more.
