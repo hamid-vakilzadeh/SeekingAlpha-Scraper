@@ -1,9 +1,17 @@
+"""
+Scraper.py
+----------
+updated Aug 15, 2022
+
+Given a company's ticker symbol, scrape the earnings announcement transcript in HTML format:
+"""
 
 from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.common.exceptions import NoSuchElementException
 from webdriver_manager.chrome import ChromeDriverManager
 from Transcripts import TranscriptLink, TranscriptText
 from argparse import ArgumentParser
@@ -15,9 +23,9 @@ import yaml
 # accept arguments for scraping
 argument_parser = ArgumentParser()
 argument_parser.add_argument('-t', '--ticker',
-                             help='Ticker of the desired company',
-                             default=None)
-argument_parser.parse_args()
+                             help='Ticker of the desired company')
+
+args = argument_parser.parse_args()
 
 
 # load your environment variables from the secret.yaml file
@@ -40,11 +48,15 @@ def open_browser() -> webdriver:
 
 # login to Seeking Alpha for premium only content
 def sign_in(driver: webdriver) -> None:
-    driver.find_element(By.XPATH, value='//span[text()="Sign In"]').click()
-    driver.find_element(By.NAME, value='email').send_keys(my_setup['username'])
-    driver.find_element(By.NAME, value='password').send_keys(my_setup['password'])
-    sleep(3)
-    driver.find_element(By.XPATH, value='//button[@type="submit"]').click()
+    try:
+        driver.find_element(By.XPATH, value='//span[text()="Sign In"]').click()
+        sleep(3)
+        driver.find_element(By.XPATH, value='//input[@name="email"]').send_keys(my_setup['username'])
+        driver.find_element(By.XPATH, value='//input[@name="password"]').send_keys(my_setup['password'])
+        sleep(3)
+        driver.find_element(By.XPATH, value='//button[@data-test-id="sign-in-button"]').click()
+    except NoSuchElementException:
+        pass
 
 
 # get all the transcripts from webpage
@@ -75,22 +87,21 @@ def press_and_hold(driver):
 
 if __name__ == '__main__':
 
-    ticker = 'FIVE'
-    link = f'https://seekingalpha.com/symbol/{ticker}/earnings/transcripts'
+    link = f'https://seekingalpha.com/symbol/{args.ticker}/earnings/transcripts'
 
     browser = open_browser()
     sleep(3)
     browser.get(link)
     sleep(3)
     sign_in(browser)
-
+    sleep(3)
     # get the transcript links
     transcript_links = get_transcripts(browser)
 
     # get article information
     transcript_articles = []
     for article in transcript_links:
-        this_article = TranscriptLink(article, symbol=ticker)
+        this_article = TranscriptLink(article, symbol=args.ticker)
         article_info: dict = this_article.get_article_information()
         transcript_articles.append(article_info)
 
@@ -99,7 +110,8 @@ if __name__ == '__main__':
             browser.get(article['url'])
             transcript_text = TranscriptText(browser)
             with open(
-                    f'Outputs/Transcripts/{ticker}_{article["document_type"]}_{article["article_title"]}.txt', 'w') as \
+                    f'Outputs/Transcripts/{args.ticker}_'
+                    f'{article["document_type"]}_{article["article_title"]}.txt', 'w') as \
                     transcript_file:
                 transcript_file.write(transcript_text.html_content)
             sleep(randrange(3, 6))
