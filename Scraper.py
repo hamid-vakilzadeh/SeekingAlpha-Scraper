@@ -111,7 +111,7 @@ if __name__ == '__main__':
             transcript_text = TranscriptText(browser)
             with open(
                     f'Outputs/Transcripts/{args.ticker}_'
-                    f'{article["document_type"]}_{article["article_title"]}.txt', 'w') as \
+                    f'{article["document_type"]}_{article["article_title"]}.html', 'w') as \
                     transcript_file:
                 transcript_file.write(transcript_text.html_content)
             sleep(randrange(3, 6))
