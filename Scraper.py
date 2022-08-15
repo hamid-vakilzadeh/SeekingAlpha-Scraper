@@ -1,6 +1,7 @@
 """
 Scraper.py
 ----------
+By: Hamid Vakilzadeh, Ph.D.
 updated Aug 15, 2022
 
 Given a company's ticker symbol, scrape the earnings announcement transcript in HTML format:
