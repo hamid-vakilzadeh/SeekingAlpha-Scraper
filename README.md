@@ -4,7 +4,7 @@ A bot for collecting Earnings Announcement Transcripts from SeekingAlpha.com
 # Disclaimer
 **_DO NOT ABUSE THIS SCRAPER._**
 
-This scraper was developed for educational purposes only and has limited applications.
+This scraper was developed for educational purposes only and serves no other purposes.
 SeekingAlpha TOS prohibit scraping and I make no representation that your account won't be banned if you use this program. 
 Furthermore, should I be contacted by SeekingAlpha with a request to remove this repo, I will do so immediately.
 
@@ -49,5 +49,5 @@ You should probably do it manually in the session that you start and try again.
 * After the first time you sing in, you will not need to sing in again because
 the `chromedriver` option `user-data-dir` is added.
 * This module uses `webdriver-manager`, which handles `chromedriver` versions automatically.
-* Lastly and importantly, this scraper is designed to be slow by design. as mentioned before, this 
+* Lastly and importantly, this scraper is slow by design. As mentioned before, this 
 is for educational purposes only and nothing more.
